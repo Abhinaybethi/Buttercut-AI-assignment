@@ -1,20 +1,13 @@
+// App.js
 import React from 'react';
-import { SafeAreaView, StatusBar, View, Text, TouchableOpacity } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import EditorScreen from './screens/EditorScreen';
-
-const Stack = createNativeStackNavigator();
+import { SafeAreaView, StatusBar } from 'react-native';
+import EditorScreen from './src/screens/EditorScreen';
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Editor"
-          component={EditorScreen}
-          options={{ title: 'Buttercut AI – Video Editor' }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#111' }}>
+      <StatusBar barStyle="light-content" />
+      <EditorScreen />
+    </SafeAreaView>
   );
 }

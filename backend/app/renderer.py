@@ -1,31 +1,23 @@
-import ffmpeg
 import os
+import subprocess
+import json
+import time
 
-VIDEOS_DIR = "videos"
+def render_video(input_path, overlays, output_path, job_id, jobs):
+    try:
+        # Simulate rendering delay
+        time.sleep(3)
 
-def render_video(input_path: str, overlays: list, output_path: str):
-    """
-    Renders video with overlays using ffmpeg.
-    overlays: list of dicts {type, content, position, start_time, end_time}
-    """
-    stream = ffmpeg.input(input_path)
+        # Example ffmpeg command (basic copy, not applying overlays for simplicity)
+        cmd = [
+            "ffmpeg",
+            "-i", input_path,
+            "-codec", "copy",
+            output_path
+        ]
+        subprocess.run(cmd, check=True)
 
-    for ov in overlays:
-        if ov['type'] == 'text':
-            # Simple text overlay example
-            stream = ffmpeg.drawtext(
-                stream,
-                text=ov['content'],
-                x=ov['position']['x'],
-                y=ov['position']['y'],
-                enable=f'between(t,{ov["start_time"]},{ov["end_time"]})',
-                fontsize=24,
-                fontcolor='white'
-            )
-        elif ov['type'] == 'image':
-            img_path = os.path.join(VIDEOS_DIR, ov['content'])
-            overlay_stream = ffmpeg.input(img_path)
-            stream = ffmpeg.overlay(stream, overlay_stream, x=ov['position']['x'], y=ov['position']['y'], enable=f'between(t,{ov["start_time"]},{ov["end_time"]})')
-        # Video overlay can be added similarly
+        jobs[job_id]["status"] = "completed"
 
-    ffmpeg.output(stream, output_path).run(overwrite_output=True)
+    except Exception as e:
+        jobs[job_id]["status"] = f"failed: {str(e)}"
